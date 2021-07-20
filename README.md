@@ -84,13 +84,13 @@ typealias Codable = Decodable & Encodable
 
 * Coden이 그려본 Sequence Diagram
 
-  ![image](https://user-images.githubusercontent.com/39452092/125982468-c6a08509-cd85-42e1-bce1-cccc01270419.png)
+  <img src="https://user-images.githubusercontent.com/39452092/125982468-c6a08509-cd85-42e1-bce1-cccc01270419.png" width=700 />
 
 &nbsp;
 
 * Coden이 그려본 Delegate에 대한 Class Diagram
 
-  ![image](https://user-images.githubusercontent.com/39452092/125983592-528a5d38-544b-4526-96a5-e2f4c570d4a9.png)
+  <img src="https://user-images.githubusercontent.com/39452092/125983592-528a5d38-544b-4526-96a5-e2f4c570d4a9.png" width=800 />
 
   **`AnyObject`가 있는 이유**
 
@@ -125,7 +125,7 @@ Protocol이 AnyObject를 상속하면 해당 프로토콜은 클래스만 채택
 
 #### 기본 스타일 셀 VS. 커스텀 셀
 
-![image](https://user-images.githubusercontent.com/39452092/126276673-aec2cc26-29e8-4d46-957d-f1d966e3ee65.png)
+<img src="https://user-images.githubusercontent.com/39452092/126276673-aec2cc26-29e8-4d46-957d-f1d966e3ee65.png" width=600 />
 
 > https://developer.apple.com/documentation/uikit/uitableviewcell
 
@@ -300,8 +300,44 @@ class Yagom2 {
     }
 }
 ```
-
-- 위와같이 쓸거라면 get이 들어가는게 적절한데 위 링크에서는 왜 get을 넣었을까..
+   
+- _~~위와같이 쓸거라면 get이 들어가는게 적절한데 위 링크에서는 왜 get을 넣었을까..~~_      
+- `Yagom2` 클래스에  작성한 방식처럼 연산프로퍼티를 getter setter로써 쓴다면 get과 set이라는 것을 내부에서 나눠주는게 별로 이상하지 않은데, [링크](https://www.appsdeveloperblog.com/disable-rotation-of-uiviewcontroller-embedded-into-uinavigationcontroller/) 에서는 값을 얻어가는 부분만 있음에도 내부를 get으로 한번 더 감싼 부분이 이해가 가지 않았다.   
+"위와같이(Yagom2 클래스의 `age` 연산 프로퍼티같이) 쓸거라면 get이 들어가는게 적절한데 왜 링크에서는 값을 얻는 부분만 있음에도 get을 넣었을까!" 실제로 get을 빼도 동작은 문제가 없었다.   
+&nbsp;   
+아래는 의문을 가진 부분에 대한 코드이다. 
+```swift
+extension UINavigationController {
+    
+    override open var shouldAutorotate: Bool {
+        get {
+            if let visibleVC = visibleViewController {
+                return visibleVC.shouldAutorotate
+            }
+            return super.shouldAutorotate
+        }
+    }
+    
+    override open var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation{
+        get {
+            if let visibleVC = visibleViewController {
+                return visibleVC.preferredInterfaceOrientationForPresentation
+            }
+            return super.preferredInterfaceOrientationForPresentation
+        }
+    }
+    
+    override open var supportedInterfaceOrientations: UIInterfaceOrientationMask{
+        get {
+            if let visibleVC = visibleViewController {
+                return visibleVC.supportedInterfaceOrientations
+            }
+            return super.supportedInterfaceOrientations
+        }
+    }
+}
+```
+> https://www.appsdeveloperblog.com/disable-rotation-of-uiviewcontroller-embedded-into-uinavigationcontroller/
 
   <br/>
 
